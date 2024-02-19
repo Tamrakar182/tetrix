@@ -1,5 +1,6 @@
 import { pieces, pieceColors } from "./constants.js";
 
+// creates a matrix with the given width and height
 export function createMatrix(width, height) {
     const matrix = [];
     while (height--) {
@@ -8,6 +9,7 @@ export function createMatrix(width, height) {
     return matrix;
 }
 
+// returns a tetris piece
 export function createPiece(type) {
     switch (type) {
         case 'T':
@@ -56,6 +58,7 @@ export function createPiece(type) {
     }
 }
 
+// generates a new piece
 export function generateNewPiece() {
     const randomIndex = pieces.length * Math.random() | 0;
     const newPiece = createPiece(pieces[randomIndex]);

@@ -1,70 +1,18 @@
-import { updateScoreAndLines } from "./script.js";
-import { COLS, ROWS, BLOCK_SIZE } from "./constants.js";
+// imports
+import { COLS, ROWS } from "./constants.js";
 import { generateNewPiece, createMatrix } from "./utils.js";
 
-let player = generateNewPiece();
-let field = createMatrix(COLS, ROWS);
-let isGameOver = false;
+// the various document elements
+const scoreElement = document.getElementById('score');
+const linesElement = document.getElementById('lines');
 
+// game variables
+export let score = 0;
+let linesCleared = 0;
+export let player = generateNewPiece();
+export let field = createMatrix(COLS, ROWS);
 
-function drawPiece(canvasContext, piece, offset) {
-    piece.forEach((row, yAxis) => {
-        row.forEach((value, xAxis) => {
-            if (value !== 0) {
-                canvasContext.fillStyle = player.color;
-                canvasContext.fillRect(xAxis + offset.xAxis, yAxis + offset.yAxis, 1, 1);
-            }
-        })
-    })
-}
-
-function draw(canvasContext) {
-    canvasContext.fillStyle = "black";
-    canvasContext.fillRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
-
-    field.forEach((row, yAxis) => {
-        row.forEach((value, xAxis) => {
-            if (value !== 0 && typeof value === "string") {
-                canvasContext.fillStyle = value;
-                canvasContext.fillRect(xAxis, yAxis, 1, 1);
-            }
-        });
-    });
-
-    drawPiece(canvasContext, player.piece, player.position);
-}
-
-let dCounter = 0;
-let dropInterval = 500;
-let lastTime = 0;
-let animationId = null;
-
-export function startUpdating(canvasContext) {
-    function update(time = 0) {
-        if (isGameOver) {
-            cancelAnimationFrame(animationId);
-            return;
-        }
-
-        const deltaTime = time - lastTime;
-        lastTime = time;
-        dCounter += deltaTime;
-        if (dCounter > dropInterval) {
-            player.position.yAxis++;
-            dCounter = 0;
-            if (checkCollisionAndGeneratePiece()) {
-                gameOver(canvasContext);
-                return;
-            }
-        }
-
-        draw(canvasContext);
-        animationId = requestAnimationFrame(update);
-    }
-
-    animationId = requestAnimationFrame(update);
-}
-
+// collision detection
 function collide(field, player) {
     const { piece, position } = player;
     for (let yAxis = 0; yAxis < piece.length; ++yAxis) {
@@ -88,7 +36,7 @@ function collide(field, player) {
     return false;
 }
 
-function checkCollisionAndGeneratePiece() {
+export function checkCollisionAndGeneratePiece() {
     if (collide(field, player)) {
         if (player.position.yAxis === 0) {
             return true;
@@ -123,6 +71,7 @@ function checkForCompletedLines() {
     }
 }
 
+// piece rotation & join
 function rotate(piece, control) {
     for (let yAxis = 0; yAxis < piece.length; yAxis++) {
         for (let xAxis = 0; xAxis < yAxis; xAxis++) {
@@ -152,21 +101,29 @@ function join(field, player) {
     return copyField;
 }
 
-export function playerXMovement(control) {
+function updateScoreAndLines(addedScore, addedLines) {
+    score += addedScore;
+    scoreElement.textContent = score;
+    linesCleared += addedLines;
+    linesElement.textContent = linesCleared;
+}
+
+// player movements
+function playerXMovement(control) {
     player.position.xAxis += control;
     if (collide(field, player)) {
         player.position.xAxis -= control;
     }
 }
 
-export function playerDownMovement(control = 1) {
+function playerDownMovement(control = 1) {
     player.position.yAxis += control;
     if (collide(field, player)) {
         player.position.yAxis -= control;
     }
 }
 
-export function playerRotate(control) {
+function playerRotate(control) {
     const originalPosition = player.position.xAxis;
     let offset = 1;
     rotate(player.piece, control);
@@ -181,12 +138,14 @@ export function playerRotate(control) {
     }
 }
 
-function gameOver(canvasContext) {
-    cancelAnimationFrame(animationId);
-    isGameOver = true;
-    canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
-    canvasContext.fillStyle = "red";
-    document.getElementById("game-over").style.display = "flex";
-    document.getElementById("game-board").style.display = "none";
-    document.getElementById("play-button").style.display = "block";
-}
+document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft" || e.key === "a") {
+        playerXMovement(-1);
+    } else if(e.key === "ArrowRight" || e.key === "d") {
+        playerXMovement(1);
+    } else if(e.key === "ArrowDown" || e.key === "s") {
+        playerDownMovement();
+    } else if(e.key === "ArrowUp" || e.key === "w" || e.key === " ") {
+        playerRotate(1);
+    }
+})
