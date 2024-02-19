@@ -1,9 +1,10 @@
 import { updateScoreAndLines } from "./script.js";
-import { COLS, ROWS } from "./constants.js";
+import { COLS, ROWS, BLOCK_SIZE } from "./constants.js";
 import { generateNewPiece, createMatrix } from "./utils.js";
 
 let player = generateNewPiece();
 let field = createMatrix(COLS, ROWS);
+let isGameOver = false;
 
 
 function drawPiece(canvasContext, piece, offset) {
@@ -36,24 +37,32 @@ function draw(canvasContext) {
 let dCounter = 0;
 let dropInterval = 500;
 let lastTime = 0;
+let animationId = null;
 
 export function startUpdating(canvasContext) {
     function update(time = 0) {
+        if (isGameOver) {
+            cancelAnimationFrame(animationId);
+            return;
+        }
+
         const deltaTime = time - lastTime;
         lastTime = time;
         dCounter += deltaTime;
         if (dCounter > dropInterval) {
             player.position.yAxis++;
             dCounter = 0;
-
-            checkCollisionAndGeneratePiece();
+            if (checkCollisionAndGeneratePiece()) {
+                gameOver(canvasContext);
+                return;
+            }
         }
 
         draw(canvasContext);
-        requestAnimationFrame(update);
+        animationId = requestAnimationFrame(update);
     }
 
-    update();
+    animationId = requestAnimationFrame(update);
 }
 
 function collide(field, player) {
@@ -81,6 +90,9 @@ function collide(field, player) {
 
 function checkCollisionAndGeneratePiece() {
     if (collide(field, player)) {
+        if (player.position.yAxis === 0) {
+            return true;
+        }
         player.position.yAxis--;
         field = join(field, player);
         checkForCompletedLines();
@@ -111,7 +123,6 @@ function checkForCompletedLines() {
     }
 }
 
-
 function rotate(piece, control) {
     for (let yAxis = 0; yAxis < piece.length; yAxis++) {
         for (let xAxis = 0; xAxis < yAxis; xAxis++) {
@@ -134,7 +145,6 @@ function join(field, player) {
                 const fieldY = yAxis + player.position.yAxis;
                 const fieldX = xAxis + player.position.xAxis;
                 copyField[fieldY][fieldX] = player.color;
-                console.log(copyField)
             }
         });
     });
@@ -169,4 +179,14 @@ export function playerRotate(control) {
             return;
         }
     }
+}
+
+function gameOver(canvasContext) {
+    cancelAnimationFrame(animationId);
+    isGameOver = true;
+    canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
+    canvasContext.fillStyle = "red";
+    document.getElementById("game-over").style.display = "flex";
+    document.getElementById("game-board").style.display = "none";
+    document.getElementById("play-button").style.display = "block";
 }
