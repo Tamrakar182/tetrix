@@ -1,5 +1,5 @@
-const gameOverAudio = new Audio("http://www.mario-museum.net/sons/smb2_perdu.wav");
-const startAudio = new Audio("../start.mp3");
+const gameOverAudio = new Audio("audio/gameOver.wav");
+const startAudio = new Audio("audio/start.mp3");
 
 // imports
 import { BLOCK_SIZE, COLS, ROWS } from "./constants.js";

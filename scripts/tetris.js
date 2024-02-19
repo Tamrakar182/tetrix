@@ -1,5 +1,5 @@
-let collideSound = new Audio("../collide.mp3");
-let lineClear = new Audio("https://www.vertigogaming.org/downloads/svencoop/sound/sc_tetris/clear.wav");
+let collideSound = new Audio("audio/collide.mp3");
+let lineClear = new Audio("audio/clear.wav");
 
 // imports
 import { COLS, ROWS } from "./constants.js";
