@@ -1,15 +1,19 @@
-import { Spiece, field } from "./constants.js";
+import { field, pieces, pieceColors } from "./constants.js";
+import { createPiece } from "./utils.js";
+
+const randomIndex = pieces.length * Math.random() | 0;
 
 const player = {
-    position: { xAxis: 4, yAxis: -2 },
-    piece: Spiece,
+    position: { xAxis: 4, yAxis: -1 },
+    piece: createPiece(pieces[randomIndex]),
+    color: pieceColors[randomIndex],
 }
 
 function drawPiece(canvasContext, piece, offset) {
     piece.forEach((row, yAxis) => {
         row.forEach((value, xAxis) => {
             if (value !== 0) {
-                canvasContext.fillStyle = "blue";
+                canvasContext.fillStyle = player.color;
                 canvasContext.fillRect(xAxis + offset.xAxis, yAxis + offset.yAxis, 1, 1);
             }
         })
@@ -72,6 +76,7 @@ function collide(field, player) {
 }
 
 function rotate(piece, control) {
+    // rotation
     for (let yAxis = 0; yAxis < piece.length; yAxis++) {
       for (let xAxis = 0; xAxis < yAxis; xAxis++) {
         [piece[xAxis][yAxis], piece[yAxis][xAxis]] = [piece[yAxis][xAxis], piece[xAxis][yAxis]];

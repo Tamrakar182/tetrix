@@ -6,8 +6,5 @@ export const BLOCK_SIZE = 20;
 
 export const field = createMatrix(COLS, ROWS);
 
-export const Spiece = [
-    [0, 0, 0],
-    [0, 1, 1],
-    [1, 1, 0],
-];
+export const pieces = 'TJLOSZI';
+export const pieceColors = ['purple', 'yellow', 'orange', 'blue', 'cyan', 'green', 'red'];
