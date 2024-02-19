@@ -4,18 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />
     <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
     <title>Tetris Game</title>
-    <meta name="description" content="Tetris Game made by Tamrakar182 on Github" />
+    <meta name="description" content="Tetris made by Tamrakar182" />
+    <meta name="theme-color" content="#32F5B8" />
+
+    <meta property="og:title" content="Tetris" />
+    <meta property="og:description" content="WASD or Arrow Keys" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tamrakar182.github.io/tetrix/" />
+
+    <meta property="og:image" content="https://tamrakar182.github.io/tetrix/tetris.png" />
+    <meta property="og:image:secure_url" content="https://tamrakar182.github.io/tetrix/tetris.png" />
+    <meta property="og:image:alt" content="Tetris" />
+    <meta property="og:image:type" content="image/png" />
 </head>
 
 <body>
     <div class="grid">
         <div id="game-start">
-            <h1>Use   &#8593(W) &#8595(S) &#8592(A) &#8594(D) to control</h1>
+            <h1>Use &#8593(W) &#8595(S) &#8592(A) &#8594(D) to control</h1>
             <h2>Last High Score: <span id="high-score">0</span></h2>
         </div>
         <div id="game-over">
@@ -24,11 +37,13 @@
         </div>
         <canvas id="game-board" class="game-board"></canvas>
         <div class="right-column">
-            <div>
+            <div class="content">
+                <img src="tetris.png" alt="Tetris" class="image" />
                 <h1>TETRIS TIME</h1>
-                <p>Score: <span id="score">0</span></p>
-                <p>Lines: <span id="lines">0</span></p>
-                <canvas id="next" class="next"></canvas>
+                <div>
+                    <p>Score: <span id="score">0</span></p>
+                    <p>Lines: <span id="lines">0</span></p>
+                </div>
             </div>
             <button id="play-button" class="play-button">Play</button>
         </div>
