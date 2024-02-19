@@ -33,8 +33,12 @@ export function startUpdating(canvasContext) {
         lastTime = time;
         dCounter += deltaTime;
         if (dCounter > dropInterval) {
-            player.position.yAxis++; 
+            player.position.yAxis++;
             dCounter = 0;
+
+            if (collide(field, player)) {
+                player.position.yAxis--;
+            }
         }
 
         draw(canvasContext);
@@ -44,12 +48,15 @@ export function startUpdating(canvasContext) {
     update();
 }
 
-function join(field, player) {
-    player.piece.forEach((row, yAxis) => {
-        row.forEach((value, xAxis) => {
-            if (value !== 0) {
-                field[yAxis + player.position.yAxis][xAxis + player.position.xAxis] = value;
+function collide(field, player) {
+    const [piece, position] = [player.piece, player.position];
+    for (let yAxis = 0; yAxis < piece.length; ++yAxis) {
+        for (let xAxis = 0; xAxis < piece[yAxis].length; ++xAxis) {
+            if (piece[yAxis][xAxis] !== 0 && (field[yAxis + position.yAxis] && field[yAxis + position.yAxis][xAxis + position.xAxis]) !== 0) {
+                return true;
             }
-        })
-    })
+
+        }
+    }
+    return false;
 }
