@@ -1,5 +1,5 @@
 import { BLOCK_SIZE, COLS, ROWS } from "./constants.js";
-import { startUpdating } from "./tetris.js";
+import { startUpdating, playerXMovement, playerDownMovement } from "./tetris.js";
 
 const canvas = document.getElementById('game-board');
 const ctx = canvas.getContext('2d');
@@ -14,5 +14,15 @@ startButton.addEventListener("click", () => {
     startUpdating(ctx);
     startButton.style.display = "none";
 });
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+        playerXMovement(-1);
+    } else if(e.key === "ArrowRight") {
+        playerXMovement(1);
+    } else if(e.key === "ArrowDown") {
+        playerDownMovement();
+    }
+})
 
 

@@ -1,7 +1,7 @@
 import { Spiece, field } from "./constants.js";
 
 const player = {
-    position: { xAxis: 4, yAxis: -1 },
+    position: { xAxis: 4, yAxis: -2 },
     piece: Spiece,
 }
 
@@ -55,8 +55,21 @@ function collide(field, player) {
             if (piece[yAxis][xAxis] !== 0 && (field[yAxis + position.yAxis] && field[yAxis + position.yAxis][xAxis + position.xAxis]) !== 0) {
                 return true;
             }
-
         }
     }
     return false;
+}
+
+export function playerXMovement(control) { 
+    player.position.xAxis += control;
+    if (collide(field, player)) { 
+      player.position.xAxis -= control;
+    }
+}
+
+export function playerDownMovement(control = 1) {
+    player.position.yAxis += control;
+    if (collide(field, player)) { 
+      player.position.yAxis -= control;
+    }
 }
