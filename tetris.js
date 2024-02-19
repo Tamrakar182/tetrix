@@ -49,15 +49,39 @@ export function startUpdating(canvasContext) {
 }
 
 function collide(field, player) {
-    const [piece, position] = [player.piece, player.position];
+    const { piece, position } = player;
     for (let yAxis = 0; yAxis < piece.length; ++yAxis) {
         for (let xAxis = 0; xAxis < piece[yAxis].length; ++xAxis) {
-            if (piece[yAxis][xAxis] !== 0 && (field[yAxis + position.yAxis] && field[yAxis + position.yAxis][xAxis + position.xAxis]) !== 0) {
-                return true;
+            if (piece[yAxis][xAxis] !== 0) {
+                const fieldY = yAxis + position.yAxis;
+                const fieldX = xAxis + position.xAxis;
+
+                // out of bounds
+                if (fieldY < 0 || fieldY >= field.length || fieldX < 0 || fieldX >= field[0].length) {
+                    return true;
+                }
+
+                // other piece
+                if (field[fieldY][fieldX] !== 0) {
+                    return true;
+                }
             }
         }
     }
     return false;
+}
+
+function rotate(piece, control) {
+    for (let yAxis = 0; yAxis < piece.length; yAxis++) {
+      for (let xAxis = 0; xAxis < yAxis; xAxis++) {
+        [piece[xAxis][yAxis], piece[yAxis][xAxis]] = [piece[yAxis][xAxis], piece[xAxis][yAxis]];
+      }
+    }
+    if (control > 0) {
+      piece.forEach((row) => row.reverse());
+    } else {
+      piece.reverse();
+    }
 }
 
 export function playerXMovement(control) { 
@@ -71,5 +95,20 @@ export function playerDownMovement(control = 1) {
     player.position.yAxis += control;
     if (collide(field, player)) { 
       player.position.yAxis -= control;
+    }
+}
+
+export function playerRotate(control) {
+    const originalPosition = player.position.xAxis;
+    let offset = 1;
+    rotate(player.piece, control);
+    while (collide(field, player)) {
+        player.position.xAxis += offset;
+        offset = -(offset + (offset > 0 ? 1 : -1));
+        if (offset > player.piece[0].length) {
+            rotate(player.piece, -control);
+            player.position.xAxis = originalPosition;
+            return;
+        }
     }
 }
