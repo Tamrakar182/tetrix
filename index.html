@@ -10,15 +10,18 @@
 </head>
 
 <body>
-    <div>
+    <div class="grid">
         <canvas id="game-board" class="game-board"></canvas>
-        <div>
-            <h1>TETRIS TIME</h1>
-            <p>Score: 0</p>
-            <p>Lines: 0</p>
-            <p>Level: 0</p>
+        <div class="right-column">
+            <div>
+                <h1>TETRIS TIME</h1>
+                <p>Score: <span id="score">0</span></p>
+                <p>Lines: <span id="lines">0</span></p>
+                <p>Level: <span id="level">0</span></p>
+                <canvas id="next" class="next"></canvas>
+            </div>
+            <button onclick="play()" class="play-button">Play</button>
         </div>
-        <button>Play</button>
     </div>
 
 </body>

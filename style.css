@@ -4,3 +4,29 @@
     box-sizing: border-box;
     font-family: 'Press Start 2P', cursive;
 }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.game-board {
+    border: solid 2px black;
+    height: 100%;
+    width: 100%;;
+}
+
+.play-button {
+    background-color: green;
+    font-size: 20px;
+    padding: 15px 20px;
+    cursor: pointer;
+}
