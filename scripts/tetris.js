@@ -1,5 +1,9 @@
+let collideSound = new Audio("../collide.mp3");
+let lineClear = new Audio("https://www.vertigogaming.org/downloads/svencoop/sound/sc_tetris/clear.wav");
+
 // imports
 import { COLS, ROWS } from "./constants.js";
+import { score, updateScore } from "./canvas.js";
 import { generateNewPiece, createMatrix } from "./utils.js";
 
 // the various document elements
@@ -7,10 +11,16 @@ const scoreElement = document.getElementById('score');
 const linesElement = document.getElementById('lines');
 
 // game variables
-export let score = 0;
 let linesCleared = 0;
 export let player = generateNewPiece();
+
 export let field = createMatrix(COLS, ROWS);
+export function updateField(newField) {
+    field = newField;
+}
+
+
+let isColliding = false;
 
 // collision detection
 function collide(field, player) {
@@ -38,6 +48,13 @@ function collide(field, player) {
 
 export function checkCollisionAndGeneratePiece() {
     if (collide(field, player)) {
+        if (!isColliding) {
+            collideSound.play();
+            isColliding = true;
+            collideSound.onended = function() {
+                isColliding = false;
+            };
+        }
         if (player.position.yAxis === 0) {
             return true;
         }
@@ -67,6 +84,7 @@ function checkForCompletedLines() {
         }
     }
     if (linesCleared > 0) {
+        lineClear.play();
         updateScoreAndLines(linesCleared * 100, linesCleared);
     }
 }
@@ -102,7 +120,7 @@ function join(field, player) {
 }
 
 function updateScoreAndLines(addedScore, addedLines) {
-    score += addedScore;
+    updateScore(score+addedScore);
     scoreElement.textContent = score;
     linesCleared += addedLines;
     linesElement.textContent = linesCleared;
@@ -112,6 +130,13 @@ function updateScoreAndLines(addedScore, addedLines) {
 function playerXMovement(control) {
     player.position.xAxis += control;
     if (collide(field, player)) {
+        if (!isColliding) {
+            collideSound.play();
+            isColliding = true;
+            collideSound.onended = function() {
+                isColliding = false;
+            };
+        }
         player.position.xAxis -= control;
     }
 }
@@ -119,6 +144,13 @@ function playerXMovement(control) {
 function playerDownMovement(control = 1) {
     player.position.yAxis += control;
     if (collide(field, player)) {
+        if (!isColliding) {
+            collideSound.play();
+            isColliding = true;
+            collideSound.onended = function() {
+                isColliding = false;
+            };
+        }
         player.position.yAxis -= control;
     }
 }
@@ -128,6 +160,13 @@ function playerRotate(control) {
     let offset = 1;
     rotate(player.piece, control);
     while (collide(field, player)) {
+        if (!isColliding) {
+            collideSound.play();
+            isColliding = true;
+            collideSound.onended = function() {
+                isColliding = false;
+            };
+        }
         player.position.xAxis += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
         if (offset > player.piece[0].length) {

@@ -1,6 +1,10 @@
+const gameOverAudio = new Audio("http://www.mario-museum.net/sons/smb2_perdu.wav");
+const startAudio = new Audio("../start.mp3");
+
 // imports
 import { BLOCK_SIZE, COLS, ROWS } from "./constants.js";
-import { checkCollisionAndGeneratePiece, player, field, score } from "./tetris.js";
+import { checkCollisionAndGeneratePiece, player, field, updateField } from "./tetris.js";
+import { createMatrix } from "./utils.js";
 
 // the various document elements
 const canvas = document.getElementById('game-board');
@@ -9,6 +13,19 @@ const startButton = document.getElementById('play-button');
 const gameOverScreen = document.getElementById('game-over');
 const gameStartScreen = document.getElementById('game-start');
 const finalScore = document.getElementById('final-score');
+const scoreElement = document.getElementById('score');
+const linesElement = document.getElementById('lines');
+
+// game variables
+export let score = 0;
+export function updateScore(newScore) {
+    score = newScore;
+}
+const previousScore = localStorage.getItem('score');
+
+if (previousScore) {
+    document.getElementById('high-score').textContent = previousScore;
+}
 
 // setting the canvas width and height & scaling the content
 ctx.canvas.width = COLS * BLOCK_SIZE;
@@ -17,9 +34,18 @@ ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 // event listener for the start button
 startButton.addEventListener("click", () => {
+    startAudio.play();
     gameStartScreen.style.display = "none";
-    gameOverScreen.style.display = "none";
     canvas.style.display = "block";
+    if (isGameOver) {
+        scoreElement.textContent = "0";
+        linesElement.textContent = "0";
+        gameOverScreen.style.display = "none";
+        updateField(createMatrix(COLS, ROWS));
+        score = 0;
+        isGameOver = false;
+    }
+    // player = generateNewPiece();
     startUpdating();
     startButton.style.display = "none";
 });
@@ -88,11 +114,15 @@ function startUpdating() {
 
 // game over function
 function gameOver() {
+    gameOverAudio.play();
     cancelAnimationFrame(animationId);
     isGameOver = true;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillStyle = "red";
     finalScore.textContent = `${score}`;
+    if (score > previousScore) {
+        localStorage.setItem('score', score);
+    }
     gameOverScreen.style.display = "flex";
     gameOverScreen.style.height = ROWS * BLOCK_SIZE;
     canvas.style.display = "none";

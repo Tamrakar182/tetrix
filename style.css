@@ -63,6 +63,10 @@
     align-items: center;
 }
 
+h2 {
+    padding-top: 40px;
+}
+
 @media (max-width: 600px) {
     .grid {
         grid-template-columns: 1fr;
