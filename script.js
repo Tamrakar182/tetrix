@@ -27,4 +27,16 @@ document.addEventListener("keydown", (e) => {
     }
 })
 
+let score = 0;
+let linesCleared = 0;
+
+export function updateScoreAndLines(addedScore, addedLines) {
+    const scoreElement = document.getElementById('score');
+    const linesElement = document.getElementById('lines');
+
+    scoreElement.textContent = score + addedScore;
+    score += addedScore;
+    linesElement.textContent = linesCleared + addedLines;
+    linesCleared += addedLines;
+}
 

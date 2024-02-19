@@ -1,13 +1,10 @@
-import { field, pieces, pieceColors } from "./constants.js";
-import { createPiece } from "./utils.js";
+import { updateScoreAndLines } from "./script.js";
+import { COLS, ROWS } from "./constants.js";
+import { generateNewPiece, createMatrix } from "./utils.js";
 
-const randomIndex = pieces.length * Math.random() | 0;
+let player = generateNewPiece();
+let field = createMatrix(COLS, ROWS);
 
-const player = {
-    position: { xAxis: 4, yAxis: -1 },
-    piece: createPiece(pieces[randomIndex]),
-    color: pieceColors[randomIndex],
-}
 
 function drawPiece(canvasContext, piece, offset) {
     piece.forEach((row, yAxis) => {
@@ -23,7 +20,16 @@ function drawPiece(canvasContext, piece, offset) {
 function draw(canvasContext) {
     canvasContext.fillStyle = "black";
     canvasContext.fillRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
-    drawPiece(canvasContext, field, { x: 0, y: 0 });
+
+    field.forEach((row, yAxis) => {
+        row.forEach((value, xAxis) => {
+            if (value !== 0 && typeof value === "string") {
+                canvasContext.fillStyle = value;
+                canvasContext.fillRect(xAxis, yAxis, 1, 1);
+            }
+        });
+    });
+
     drawPiece(canvasContext, player.piece, player.position);
 }
 
@@ -40,9 +46,7 @@ export function startUpdating(canvasContext) {
             player.position.yAxis++;
             dCounter = 0;
 
-            if (collide(field, player)) {
-                player.position.yAxis--;
-            }
+            checkCollisionAndGeneratePiece();
         }
 
         draw(canvasContext);
@@ -75,31 +79,80 @@ function collide(field, player) {
     return false;
 }
 
-function rotate(piece, control) {
-    // rotation
-    for (let yAxis = 0; yAxis < piece.length; yAxis++) {
-      for (let xAxis = 0; xAxis < yAxis; xAxis++) {
-        [piece[xAxis][yAxis], piece[yAxis][xAxis]] = [piece[yAxis][xAxis], piece[xAxis][yAxis]];
-      }
-    }
-    if (control > 0) {
-      piece.forEach((row) => row.reverse());
-    } else {
-      piece.reverse();
+function checkCollisionAndGeneratePiece() {
+    if (collide(field, player)) {
+        player.position.yAxis--;
+        field = join(field, player);
+        checkForCompletedLines();
+        player.position.yAxis = -1;
+        player = { ...player, ...generateNewPiece() };
     }
 }
 
-export function playerXMovement(control) { 
+function checkForCompletedLines() {
+    let linesCleared = 0;
+    for (let y = ROWS - 1; y >= 0; y--) {
+        let rowFilled = true;
+        for (let x = 0; x < COLS; x++) {
+            if (field[y][x] === 0) {
+                rowFilled = false;
+                break;
+            }
+        }
+        if (rowFilled) {
+            field.splice(y, 1);
+            field.unshift(new Array(COLS).fill(0));
+            linesCleared++;
+            y++;
+        }
+    }
+    if (linesCleared > 0) {
+        updateScoreAndLines(linesCleared * 100, linesCleared);
+    }
+}
+
+
+function rotate(piece, control) {
+    for (let yAxis = 0; yAxis < piece.length; yAxis++) {
+        for (let xAxis = 0; xAxis < yAxis; xAxis++) {
+            [piece[xAxis][yAxis], piece[yAxis][xAxis]] = [piece[yAxis][xAxis], piece[xAxis][yAxis]];
+        }
+    }
+    if (control > 0) {
+        piece.forEach((row) => row.reverse());
+    } else {
+        piece.reverse();
+    }
+}
+
+function join(field, player) {
+    const copyField = field.map(row => row.slice());
+
+    player.piece.forEach((row, yAxis) => {
+        row.forEach((value, xAxis) => {
+            if (value != 0) {
+                const fieldY = yAxis + player.position.yAxis;
+                const fieldX = xAxis + player.position.xAxis;
+                copyField[fieldY][fieldX] = player.color;
+                console.log(copyField)
+            }
+        });
+    });
+
+    return copyField;
+}
+
+export function playerXMovement(control) {
     player.position.xAxis += control;
-    if (collide(field, player)) { 
-      player.position.xAxis -= control;
+    if (collide(field, player)) {
+        player.position.xAxis -= control;
     }
 }
 
 export function playerDownMovement(control = 1) {
     player.position.yAxis += control;
-    if (collide(field, player)) { 
-      player.position.yAxis -= control;
+    if (collide(field, player)) {
+        player.position.yAxis -= control;
     }
 }
 
