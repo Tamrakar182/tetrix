@@ -5,6 +5,11 @@
     font-family: 'Press Start 2P', cursive;
 }
 
+img {
+    pointer-events: none;
+    user-select: none;
+}
+
 body {
     background-color: #BCBDC4;
 }
