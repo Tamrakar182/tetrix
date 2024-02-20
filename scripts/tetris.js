@@ -188,3 +188,11 @@ document.addEventListener("keydown", (e) => {
         playerRotate(1);
     }
 })
+
+document.getElementById("left-button").addEventListener("click", () => playerXMovement(-1));
+document.getElementById("right-button").addEventListener("click", () => playerXMovement(1));
+document.getElementById("down-button").addEventListener("click", () => playerDownMovement());
+document.getElementById("up-button").addEventListener("click", () => playerRotate(1));
+document.getElementById("a-button").addEventListener("click", () => playerRotate(1));
+document.getElementById("b-button").addEventListener("click", () => playerRotate(1));
+

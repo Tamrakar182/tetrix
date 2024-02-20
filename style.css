@@ -60,12 +60,13 @@ body {
     top: 0px;
     left: 98px;
     display: flex;
-    padding: 18px 0;
+    padding: 18px 5px;
     height: 100%;
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
     background-color: #8bac0f;
+    border-left: 1px solid #000;
 }
 
 .game-board {
@@ -106,4 +107,41 @@ body {
 p {
     padding: 2px 0;
     font-size: 10px;
+}
+
+#left-button, #right-button, #down-button, #up-button, #a-button, #b-button {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: red;
+}
+
+#left-button {
+    left: 42px;
+    bottom: 194px;
+}
+
+#right-button {
+    left: 100px;
+    bottom: 195px;
+}
+
+#down-button {
+    left: 71px;
+    bottom: 168px;
+}
+
+#up-button {
+    left: 71px;
+    bottom: 221px;
+}
+
+#a-button {
+    right: 32px;
+    bottom: 206px;
+}
+
+#b-button {
+    right: 92px;
+    bottom: 179px;
 }

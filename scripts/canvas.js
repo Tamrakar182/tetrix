@@ -36,8 +36,10 @@ gameStartScreen.style.width = `${COLS * BLOCK_SIZE}px`;
 gameStartScreen.style.height = `${ROWS * BLOCK_SIZE}px`;
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-// event listener for the start button
-startButton.addEventListener("click", () => {
+let gameStarted = false;
+
+function startGame() {
+    gameStarted = true;
     startAudio.play();
     gameStartScreen.style.display = "none";
     canvas.style.display = "block";
@@ -49,9 +51,16 @@ startButton.addEventListener("click", () => {
         score = 0;
         isGameOver = false;
     }
-    // player = generateNewPiece();
     startUpdating();
     startButton.style.display = "none";
+}
+
+// event listener for the start button
+startButton.addEventListener("click", () => startGame());
+document.addEventListener("keydown", (event) => {
+    if(event.key === "Enter" && !gameStarted) {
+        startGame();
+    }
 });
 
 // draws a tetris piece
@@ -118,6 +127,7 @@ function startUpdating() {
 
 // game over function
 function gameOver() {
+    gameStarted = false;
     gameOverAudio.play();
     cancelAnimationFrame(animationId);
     isGameOver = true;
