@@ -143,5 +143,11 @@ function gameOver() {
     startButton.style.display = "block";
 }
 
+window.addEventListener('touchstart', function(event) {
+    if (event.target.tagName === 'IMG') {
+        event.preventDefault();
+    }
+}, { passive: false });
+
 
 
