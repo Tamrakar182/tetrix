@@ -4,17 +4,41 @@
     box-sizing: border-box;
     font-family: 'Press Start 2P', cursive;
 }
+
 body {
-    background-color: #6F00F4;
+    background-color: #BCBDC4;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.shell-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameboy-shell {
+    width: 100%;
+    height: auto;
+    z-index: -1;
+    object-fit: cover;
 }
 
 .grid {
-    display: grid;
-    grid-template-columns: 320px 200px;
-    gap: 20px;
-    margin-top: 20px;
-    justify-content: center;
+    position: absolute;
+    top: 90px;
+    left: 84px;
+    z-index: 1;
 }
+
 
 .content {
     display: flex;
@@ -25,45 +49,45 @@ body {
 }
 
 .image {
-    width: 200px;
-    height: 200px;
+    width: 10px;
+    height: 10px;
     padding-bottom: 40px;
     align-self: center;
 }
 
 .right-column {
+    position: absolute;
+    top: 0px;
+    left: 98px;
     display: flex;
+    padding: 18px 0;
+    height: 100%;
+    width: 100%;
     flex-direction: column;
     justify-content: space-between;
+    background-color: #8bac0f;
 }
 
 .game-board {
-    border: solid 2px black;
-    height: 100%;
-    width: 100%;
     display: none;
 }
 
 .play-button {
-    background-color: #FFDB7F;
-    font-size: 20px;
+    background-color: #61780a;
+    font-size: 10px;
     margin-top: 20px;
-    padding: 15px 20px;
+    padding: 5px 10px;
     cursor: pointer;
-    border: 2px solid #5B00C9;
 }
 
 .play-button:hover {
-    background-color: #32F5B8;
+    background-color: #cff056;
 }
 
 #game-over {
 	z-index: 1;
-	width: 320px;
-    height: 632px;
 	text-align: center;
-	background-color: #32F5B8;
-	border: 2px solid #5B00C9;
+	background-color: #8bac0f;
 	display: none;
     flex-direction: column;
     justify-content: center;
@@ -72,26 +96,14 @@ body {
 
 #game-start {
     z-index: 1;
-    width: 320px;
-    height: 632px;
     text-align: center;
-    background-color: #32F5B8;
-    border: 2px solid #5B00C9;
+    background-color: #8bac0f;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-
-h2 {
-    padding-top: 40px;
-}
-
-@media (max-width: 600px) {
-    .grid {
-        grid-template-columns: 1fr;
-        padding-left: 40px;
-        padding-right: 40px;
-        justify-items: center;
-    }
+p {
+    padding: 2px 0;
+    font-size: 10px;
 }

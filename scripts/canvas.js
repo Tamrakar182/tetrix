@@ -30,6 +30,10 @@ if (previousScore) {
 // setting the canvas width and height & scaling the content
 ctx.canvas.width = COLS * BLOCK_SIZE;
 ctx.canvas.height = ROWS * BLOCK_SIZE;
+gameOverScreen.style.width = `${COLS * BLOCK_SIZE}px`;
+gameOverScreen.style.height = `${ROWS * BLOCK_SIZE}px`;
+gameStartScreen.style.width = `${COLS * BLOCK_SIZE}px`;
+gameStartScreen.style.height = `${ROWS * BLOCK_SIZE}px`;
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 // event listener for the start button
