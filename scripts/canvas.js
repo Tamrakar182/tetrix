@@ -58,7 +58,7 @@ function startGame() {
 // event listener for the start button
 startButton.addEventListener("click", () => startGame());
 document.addEventListener("keydown", (event) => {
-    if(event.key === "Enter" && !gameStarted) {
+    if (event.key === "Enter" && !gameStarted) {
         startGame();
     }
 });
@@ -143,11 +143,30 @@ function gameOver() {
     startButton.style.display = "block";
 }
 
-window.addEventListener('touchstart', function(event) {
+window.addEventListener('touchstart', function (event) {
     if (event.target.tagName === 'IMG') {
         event.preventDefault();
     }
 }, { passive: false });
 
+function absorbEvent_(event) {
+    var e = event || window.event;
+    e.preventDefault && e.preventDefault();
+    e.stopPropagation && e.stopPropagation();
+    e.cancelBubble = true;
+    e.returnValue = false;
+    return false;
+}
 
+function preventLongPressMenu(node) {
+    node.ontouchstart = absorbEvent_;
+    node.ontouchmove = absorbEvent_;
+    node.ontouchend = absorbEvent_;
+    node.ontouchcancel = absorbEvent_;
+}
 
+function init() {
+    preventLongPressMenu(document.getElementById('image'));
+}
+
+document.addEventListener('DOMContentLoaded', init);
